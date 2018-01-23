@@ -40,7 +40,7 @@ class DiscussionDashboardXBlock(XBlock):
     CSS_FILE = "static/css/discussion_dashboard.css"
 
     display_name = String(
-        default="Forum Participation Dashboard (discussion_dashboard)", scope=Scope.settings,
+        default="Forum Participation Dashboard", scope=Scope.settings,
         help="Display name for this block."
     )
 
