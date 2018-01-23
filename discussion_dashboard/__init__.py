@@ -1,0 +1,1 @@
+from .discussion_dashboard import DiscussionDashboardXBlock

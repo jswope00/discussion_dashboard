@@ -1,0 +1,9 @@
+/* CSS for DiscussionDashboardXBlock */
+
+.discussion_dashboard_block .count {
+    font-weight: bold;
+}
+
+.discussion_dashboard_block p {
+    cursor: pointer;
+}
