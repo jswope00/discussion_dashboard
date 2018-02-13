@@ -106,8 +106,9 @@ class DiscussionDashboardXBlock(XBlock):
 
     def get_thread_elements(self, discussion_id):
 	course = self.get_course()
+	num_pages = cc.Thread.search({'course_id': unicode(course), 'commentable_id': discussion_id}).num_pages
         threads = cc.Thread.search({
-            'course_id': unicode(course), 'commentable_id': discussion_id 	#'commentable_id': "40b963b21ac147aa9bf4b1350a1ec48c"
+            'course_id': unicode(course), 'commentable_id': discussion_id, 'per_page': num_pages * 20
         }).collection
 
 	tableData = {}
@@ -139,6 +140,7 @@ class DiscussionDashboardXBlock(XBlock):
                     tableData[responseOwner]['url'] = self.get_discussion_summary_url(course, response['user_id'])
                 else:
                     tableData[responseOwner]['comments_count'] += 1
+
 
 		for comment in comments:
 		    commentOwner = comment['username']
