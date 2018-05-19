@@ -25,7 +25,7 @@ $('#discussion_topic_id').change(function() {
                 var tbody = ""
                 for (username in threads){
                         tbody += "<tr>"
-                        tbody += "<td><a href=" +threads[username].url+ ">" +threads[username].email+ "</a></td>"
+                        tbody += "<td><a href=" +threads[username].url+ ">" +threads[username].full_name+ "</a></td>"
                         tbody += "<td>" +threads[username].thread_count+ "</td>"
                         tbody += "<td>" +threads[username].comments_count+ "</td>"
                         tbody += "</tr>"

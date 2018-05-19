@@ -11,7 +11,7 @@
 </div>
         <table id="tableData" style="width:100%;margin-top: 10px;" border = "1" >
                  <thead style="line-height:30px; background:lightgray;">
-                        <th>Email</th>
+                        <th>Username</th>
                         <th>Threads</th>
                         <th>Comments</th>
                  </thead>
@@ -19,7 +19,7 @@
                 {% if threads %}
                     {% for key, value in threads.items %}
                         <tr>
-                            <td><a href="{{ value.url }}">{{ value.email }}</a></td>
+                            <td><a href="{{ value.url }}">{{ value.full_name }}</a></td>
                             <td>{{ value.thread_count }}</td>
                             <td>{{ value.comments_count}}</td>
                         </tr>

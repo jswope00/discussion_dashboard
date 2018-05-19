@@ -154,6 +154,7 @@ class DiscussionDashboardXBlock(XBlock):
         for user in users:
             if user.username in tableData:
                 tableData[user.username]['email'] = user.email
+		tableData[user.username]['full_name'] = user.profile.name
         return tableData
 
     def student_view(self, context=None):
