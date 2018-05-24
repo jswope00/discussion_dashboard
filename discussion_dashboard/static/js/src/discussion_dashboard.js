@@ -7,6 +7,7 @@ $('#discussion_topic_id').change(function() {
 
     var option = $(this).find('option:selected');
     discussion_id = option.val();
+	$('#tableBody').empty();
 	$('#noThread').hide();
         $('#loader').show();
         var html = '<p>Loading Data ...</p>'
