@@ -7,20 +7,24 @@ $('#discussion_topic_id').change(function() {
 
     var option = $(this).find('option:selected');
     discussion_id = option.val();
-
+	$('#noThread').hide();
+        $('#loader').show();
+        var html = '<p>Loading Data ...</p>'
+        $('#loader').html(html);
         $.ajax({
             type: "POST",
             url: handle_Url,
             data: JSON.stringify({discussion_id:discussion_id}),
             success: function (threads) {
+	        $('#loader').hide();
 		if(Object.keys(threads).length === 0){
 		    $('#tableBody').empty();
-		    $('#emptyThread').show();
+		    $('#noThread').show();
                     var html = '<p>There are not yet any participation for the discussion topic selected</p>'
-                    $('#emptyThread').html(html);
+                    $('#noThread').html(html);
                 }
 		else {
-		$('#emptyThread').hide();
+		$('#noThread').hide();
 		$('#tableBody').empty();
                 var tbody = ""
                 for (username in threads){

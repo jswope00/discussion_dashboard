@@ -8,6 +8,7 @@
                         <option value="{{discussion.id}}">{{discussion.name}}</option>
                 {% endfor %}
          </select>
+	<div id="loader"></div>
 </div>
         <table id="tableData" style="width:100%;margin-top: 10px;" border = "1" >
                  <thead style="line-height:30px; background:lightgray;">
@@ -28,6 +29,7 @@
                     <div id = "emptyThread"><p>{% trans "There are not yet any participation for the discussion topic selected." %} </p> </div>
                 {% endif %}
                 </tbody>
+		<div id="noThread"></div>
         </table>
 </div>
 
