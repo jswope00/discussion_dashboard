@@ -8,7 +8,8 @@
                         <option value="{{discussion.id}}">{{discussion.name}}</option>
                 {% endfor %}
          </select>
-	<div id="loader"></div>
+        <div id="loader"></div>
+        <div id="thread_details" style="display: none"></div>
 </div>
         <table id="tableData" style="width:100%;margin-top: 10px;" border = "1" >
                  <thead style="line-height:30px; background:lightgray;">
@@ -17,19 +18,7 @@
                         <th>Comments</th>
                  </thead>
                 <tbody id="tableBody">
-                {% if threads %}
-                    {% for key, value in threads.items %}
-                        <tr>
-                            <td><a href="{{ value.url }}">{{ value.full_name }}</a></td>
-                            <td>{{ value.thread_count }}</td>
-                            <td>{{ value.comments_count}}</td>
-                        </tr>
-                    {% endfor %}
-                {% else %}
-                    <div id = "emptyThread"><p>{% trans "There are not yet any participation for the discussion topic selected." %} </p> </div>
-                {% endif %}
                 </tbody>
-		<div id="noThread"></div>
+                <div id="noThread"></div>
         </table>
 </div>
-
