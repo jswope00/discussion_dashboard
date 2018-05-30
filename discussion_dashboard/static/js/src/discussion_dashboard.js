@@ -45,8 +45,7 @@ function populateThreads(discussion_id){
 	            selected_user = this.id
 		    var option = $('#discussion_topic_id').find('option:selected');
                     discussion_topic = option.text()
-		    console.log(discussion_topic);
-		    var myWindow = window.open("", "", "fullscreen=yes")
+		    var myWindow = window.open("", "", "width=720,height=480")
 		    var thread_details = document.getElementById("thread_details").innerHTML
     		    thread_details = JSON.parse(thread_details);
 		    var html = ""
@@ -69,9 +68,9 @@ function populateThreads(discussion_id){
 			}
                     }else{
 			html += '<p>This user has not started any thread yet<p>'
-                        console.log("THREAD DETAILS IS EMPTY");
 		    }
 		    html += '<hr>'
+		    html += '<h2>Comments</h2>'
 		    if (thread_details[selected_user].comments_detail.length != 0){
 			for (item of thread_details[selected_user].comments_detail){
 			    html += '<h3><i class="fas fa-comments"></i>&nbsp;&nbsp;&nbsp;In Response to: '+item.parent+'</h3>'
@@ -80,7 +79,6 @@ function populateThreads(discussion_id){
 			}
 		    }else{
 			html += '<p>This user has not commented on any thread yet<p>'
-                        console.log("COMMENT DETAILS IS EMPTY");
 		    }
 		    html += '</body>'
 		    html += '</html>'
