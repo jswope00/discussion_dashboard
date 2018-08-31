@@ -167,7 +167,7 @@ class DiscussionDashboardXBlock(XBlock):
 
 	users = _get_users(course)
         for user in users:
-            """ if user.username in tableData: """
+            if user.username in tableData:
                 tableData[user.username]['email'] = user.email
 		tableData[user.username]['full_name'] = user.profile.name
         return tableData
