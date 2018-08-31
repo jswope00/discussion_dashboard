@@ -7,6 +7,7 @@ $(document).ready(function (){
 	var option = $('#discussion_topic_id').find('option:selected');
 	discussion_id = option.val();
 	populateThreads(discussion_id);
+	sortTable();
 });
 
 function populateThreads(discussion_id){
@@ -34,6 +35,7 @@ function populateThreads(discussion_id){
                 var tbody = ""
                 for (username in threads){
                         tbody += "<tr>"
+			tbody += "<td><a href=#tableData class='threads_popup' id=" +username+ ">" +threads[username].email+ "</a></td>"
                         tbody += "<td><a href=#tableData class='threads_popup' id=" +username+ ">" +threads[username].full_name+ "</a></td>"
                         tbody += "<td>" +threads[username].thread_count+ "</td>"
                         tbody += "<td>" +threads[username].comments_count+ "</td>"
@@ -87,6 +89,62 @@ function populateThreads(discussion_id){
             }
         });
 }
+
+function sortTable(f,n){
+    var rows = $('#tableData tbody  tr').get();
+
+    rows.sort(function(a, b) {
+
+        var A = getVal(a);
+        var B = getVal(b);
+
+        if(A < B) {
+            return -1*f;
+        }
+        if(A > B) {
+            return 1*f;
+        }
+        return 0;
+    });
+
+    function getVal(elm){
+        var v = $(elm).children('td').eq(n).text().toUpperCase();
+        if($.isNumeric(v)){
+            v = parseInt(v,10);
+        }
+        return v;
+    }
+
+    $.each(rows, function(index, row) {
+        $('#tableData').children('tbody').append(row);
+    });
+}
+var f_sl = 1; // flag to toggle the sorting order
+var f_nm = 1; // flag to toggle the sorting order
+$("#email").click(function(){
+    f_sl *= -1; // toggle the sorting order
+    var n = $(this).prevAll().length;
+    sortTable(f_sl,n);
+});
+$("#name").click(function(){
+    f_nm *= -1; // toggle the sorting order
+    var n = $(this).prevAll().length;
+    sortTable(f_nm,n);
+});
+$("#threads").click(function(){
+    f_nm *= -1; // toggle the sorting order
+    var n = $(this).prevAll().length;
+    sortTable(f_nm,n);
+});
+
+$("#comments").click(function(){
+    f_nm *= -1; // toggle the sorting order
+    var n = $(this).prevAll().length;
+    sortTable(f_nm,n);
+});
+
+
+
 $('#discussion_topic_id').change(function() {
 
     var option = $(this).find('option:selected');

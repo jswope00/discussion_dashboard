@@ -7,3 +7,8 @@
 .discussion_dashboard_block p {
     cursor: pointer;
 }
+
+#tableData th :hover {
+   background: #AAA;
+   cursor: pointer;
+}
