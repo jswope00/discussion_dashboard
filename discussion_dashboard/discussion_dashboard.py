@@ -119,21 +119,15 @@ class DiscussionDashboardXBlock(XBlock):
         date_converted = ast_date.strftime('%Y-%m-%d %H:%M:%S %Z')
 	return date_converted
 
+    def repl_func(self, matchobj):
+        return str(matchobj.group(1))
+
     def filter_symbol_from_thread_body(self, thread_body):
-	if re.search("(<http.*?>)", thread_body, re.IGNORECASE):
-	    r = re.compile(r'\<(http.*?)\>', re.IGNORECASE)
-            thread_body = r.sub(re.search(r'\<(http.*?)\>', thread_body).group(1),thread_body)
-	    return thread_body
-	elif re.search("(<www.*?>)", thread_body, re.IGNORECASE):
-            r = re.compile(r'\<(www.*?)\>', re.IGNORECASE)
-            thread_body = r.sub(re.search(r'\<(www.*?)\>', thread_body).group(1),thread_body)
-	    return thread_body
-	elif re.search("(<.*?>)", thread_body, re.IGNORECASE):
-            r = re.compile(r'\<(.*?)\>', re.IGNORECASE)
-            thread_body = r.sub(re.search(r'\<(.*?)\>', thread_body).group(1),thread_body)
+        if re.search("(<.*?>)", thread_body, re.IGNORECASE):
+            thread_body = re.sub(r'\<(.*?)\>', self.repl_func, thread_body)
             return thread_body
-	else:
-	    return thread_body
+        else:
+            return thread_body
 
     def get_thread_elements(self, discussion_id):
 	course = self.get_course()
