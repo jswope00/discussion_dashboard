@@ -23,6 +23,7 @@ from xmodule.modulestore.django import modulestore
 from datetime import datetime, timedelta
 from pytz import timezone
 import pytz
+import re
 
 log = logging.getLogger(__name__)
 
@@ -118,6 +119,22 @@ class DiscussionDashboardXBlock(XBlock):
         date_converted = ast_date.strftime('%Y-%m-%d %H:%M:%S %Z')
 	return date_converted
 
+    def filter_symbol_from_thread_body(self, thread_body):
+	if re.search("(<http.*?>)", thread_body, re.IGNORECASE):
+	    r = re.compile(r'\<(http.*?)\>', re.IGNORECASE)
+            thread_body = r.sub(re.search(r'\<(http.*?)\>', thread_body).group(1),thread_body)
+	    return thread_body
+	elif re.search("(<www.*?>)", thread_body, re.IGNORECASE):
+            r = re.compile(r'\<(www.*?)\>', re.IGNORECASE)
+            thread_body = r.sub(re.search(r'\<(www.*?)\>', thread_body).group(1),thread_body)
+	    return thread_body
+	elif re.search("(<.*?>)", thread_body, re.IGNORECASE):
+            r = re.compile(r'\<(.*?)\>', re.IGNORECASE)
+            thread_body = r.sub(re.search(r'\<(.*?)\>', thread_body).group(1),thread_body)
+            return thread_body
+	else:
+	    return thread_body
+
     def get_thread_elements(self, discussion_id):
 	course = self.get_course()
 	num_pages = cc.Thread.search({'course_id': unicode(course), 'commentable_id': discussion_id}).num_pages
@@ -135,10 +152,16 @@ class DiscussionDashboardXBlock(XBlock):
 	    if threadOwner not in tableData:
 	        tableData[threadOwner] = {'thread_count': 1, 'comments_count': 0, 'comments_detail':[]}
 	        tableData[threadOwner]['url'] = self.get_discussion_summary_url(course, thread['user_id'])
-		tableData[threadOwner]['thread_detail'] = [{'id':thread['id'], 'title':thread['title'], 'created_at':self.date_conversion(thread['created_at']), 'body':thread['body']}]
+		tableData[threadOwner]['thread_detail'] = [{'id':thread['id'],
+							    'title':thread['title'],
+							    'created_at':self.date_conversion(thread['created_at']),
+							    'body':self.filter_symbol_from_thread_body(thread['body'])}]
 	    else:
 		tableData[threadOwner]['thread_count'] += 1
-                tableData[threadOwner]['thread_detail'] += [{'id':thread['id'], 'title':thread['title'], 'created_at':self.date_conversion(thread['created_at']), 'body':thread['body']}]
+                tableData[threadOwner]['thread_detail'] += [{'id':thread['id'],
+							     'title':thread['title'],
+							     'created_at':self.date_conversion(thread['created_at']),
+							     'body':self.filter_symbol_from_thread_body(thread['body'])}]
 
 	    if 'children' in thread:
 	        responses = thread['children']
@@ -151,25 +174,39 @@ class DiscussionDashboardXBlock(XBlock):
 		if responseOwner not in tableData:
 		    tableData[responseOwner] = {'thread_count': 0, 'comments_count': 1, 'thread_detail':[]}
                     tableData[responseOwner]['url'] = self.get_discussion_summary_url(course, response['user_id'])
-		    tableData[responseOwner]['comments_detail'] = [{'parent': thread['title'],'comment_body': response['body'],'comment_date':self.date_conversion(response['created_at'])}]
+		    tableData[responseOwner]['comments_detail'] = [{'parent': thread['title'],
+								    'comment_body': self.filter_symbol_from_thread_body(response['body']),
+								    'comment_date':self.date_conversion(response['created_at'])}]
                 else:
                     tableData[responseOwner]['comments_count'] += 1
-                    tableData[responseOwner]['comments_detail'] += [{'parent': thread['title'],'comment_body': response['body'],'comment_date':self.date_conversion(response['created_at'])}]
+                    tableData[responseOwner]['comments_detail'] += [{'parent': thread['title'],
+								     'comment_body': self.filter_symbol_from_thread_body(response['body']),
+								     'comment_date':self.date_conversion(response['created_at'])}]
 		for comment in comments:
 		    commentOwner = comment['username']
 		    if commentOwner not in tableData:
 			tableData[commentOwner] = {'thread_count': 0, 'comments_count': 1, 'thread_detail':[]}
 			tableData[commentOwner]['url'] = self.get_discussion_summary_url(course, comment['user_id'])
-			tableData[commentOwner]['comments_detail'] = [{'parent': thread['title'],'comment_body': comment['body'],'comment_date': self.date_conversion(comment['created_at'])}]
+			tableData[commentOwner]['comments_detail'] = [{'parent': thread['title'],
+								       'comment_body': self.filter_symbol_from_thread_body(comment['body']),
+								       'comment_date': self.date_conversion(comment['created_at'])}]
 		    else:
 			tableData[commentOwner]['comments_count'] += 1
-                        tableData[commentOwner]['comments_detail'] += [{'parent': thread['title'],'comment_body': comment['body'],'comment_date': self.date_conversion(comment['created_at'])}]
+                        tableData[commentOwner]['comments_detail'] += [{'parent': thread['title'],
+									'comment_body': self.filter_symbol_from_thread_body(comment['body']),
+									'comment_date': self.date_conversion(comment['created_at'])}]
 
+	""" Get ALL active users in course """
 	users = _get_users(course)
+	""" For each user enrolled in course """
         for user in users:
+            """ If the username of the user in the course exists in the Table of Discussion data """
             if user.username in tableData:
                 tableData[user.username]['email'] = user.email
-		tableData[user.username]['full_name'] = user.profile.name
+	        tableData[user.username]['full_name'] = user.profile.name
+            """ else:
+	        tableData[user.username]['email'] = tableData[user.username]
+	        tableData[user.username]['full_name'] = tableData[user.username]"""
         return tableData
 
     def student_view(self, context=None):
